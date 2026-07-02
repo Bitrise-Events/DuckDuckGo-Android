@@ -333,25 +333,6 @@ fladle {
         }
     }
 }
-
-afterEvaluate {
-    // Export Firebase Test Lab (Flank) tests to Develocity
-    tasks.matching { it.name.startsWith("execFlank") }.names.each {
-        ImportJUnitXmlReports.register(
-                tasks,
-                tasks.named(it),
-                ANDROID_FIREBASE
-        ).configure {
-            // Import FullJUnitReport.xml, not JUnitReport.xml. fullJunitResult=true makes
-            // Flank emit this extra report carrying the flaky markers (failure nodes on
-            // passed-after-retry tests) that the ANDROID_FIREBASE dialect needs to detect
-            // flaky tests; the plain JUnitReport.xml has no such markers (imports fine but
-            // always reports 0 flaky).
-            reports.setFrom(file("build/fladle/fladleResults/FullJUnitReport.xml"))
-        }
-    }
-}
-
 tasks.register('aiConfigCheck') {
     group = 'verification'
     description = 'Validates AI config (.cursor/rules, .claude/skills) against AGENTS.md and checks for dangling references.'
